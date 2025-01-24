@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Admin
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+     
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="logo">
+                    <span class="main-color">C</span>ine<span class="main-color">M</span>aster
+                </a>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="movie-list">
+            <div class="header">
+                <h2>Movie List</h2>
+                <button class="add-movie-btn" id="open-add-modal">Add Movie</button>
+            </div>
+            <table class="movie-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Released Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>The Judge From Hell</td>
+                        <td>Thriller</td>
+                        <td>2020-07-08</td>
+                        <td class="actions">
+                            <button class="action-btn view-btn">View</button>
+                            <button class="action-btn edit-btn">Edit</button>
+                            <button class="action-btn delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="movie-modal">
+        <div class="modal-content">
+            <h1 id="modal-title"><span class="main-color">A</span>dd <span class="main-color">M</span>ovie</h1>
+            <form>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <br><input type="text" id="title" placeholder="Enter movie title">
+                </div>
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <br><select id="genre">
+                        <option>Select Genre</option>
+                        <option>Action</option>
+                        <option>Comedy</option>
+                        <option>Drama</option>
+                        <option>Thriller</option>
+                        <option>Horror</option>
+                        <option>Romance</option>
+                    </select>
+                </div><br>
+                <div class="form-group">
+                    <label for="release-date">Release Date</label>
+                    <br><input type="date" id="release-date">
+                </div><br>
+                <div class="form-group">
+                    <label for="ratings">Ratings</label>
+                    <br><select id="ratings">
+                        <option>Select Ratings</option>
+                        <option>5</option>
+                        <option>4</option>
+                        <option>3</option>
+                        <option>2</option>
+                        <option>1</option>
+                    </select>
+                </div><br>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <br><input type="text" id="duration" placeholder="Enter duration (e.g., 2h 30m)">
+                </div><br>
+                <div class="form-group">
+                    <label for="cast">Movie Cast</label>
+                    <br><input type="text" id="cast" placeholder="Movie Casts">
+                </div><br>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <br><input type="description" id="description" placeholder="Enter movie description">   
+                </div>
+
+        
+                <div class="form-group">
+                    <label for="image">Image</label>
+                    <br><input type="file" id="image">
+                </div><br>
+                <div class="form-actions">
+                    <button type="button" id="close-modal" class="cancel-btn">Cancel</button>
+                    <button type="submit" id="modal-action-btn" class="add-btn">Add Movie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+<div class="modal" id="view-movie-modal">
+    <div class="modal-content view-modal-content">
+        <span class="close-view-modal" id="close-view-modal">&times;</span>
+        <div class="view-modal-header">
+            <h1 id="view-movie-title">Judge From Hell</h1>
+        </div>
+        <div class="view-modal-body">
+            <div class="view-movie-poster">
+                <img id="movie-poster" src="images/JudgeFromHell.jpg" alt="Movies">
+            </div>
+            <div class="view-movie-details">
+                <p><strong>Title:</strong> <span id="view-title">The Judge From Hell</span></p>
+                <p><strong>Genre:</strong> <span id="view-genre">Thriller</span></p>
+                <p><strong>Release Date:</strong> <span id="view-release-date">2020-07-08</span></p>
+                <p><strong>Description:</strong> <span id="view-description">A demon judge...</span></p>
+                <p><strong>Ratings:</strong> <span id="view-ratings">⭐⭐⭐⭐⭐</span></p>
+                <p><strong>Duration:</strong> <span id="view-duration">120 mins</span></p>
+                <p><strong>Cast:</strong> <span id="view-cast">Park Shin-hye and Kim Jae-young</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        // JavaScript to handle modal functionality
+const modal = document.getElementById("movie-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalActionBtn = document.getElementById("modal-action-btn");
+
+// Clear all input fields and textareas
+function clearModalFields() {
+    document.getElementById("title").value = "";
+    document.getElementById("genre").value = "Select Genre";
+    document.getElementById("release-date").value = "";
+    document.getElementById("ratings").value = "Select Ratings";
+    document.getElementById("duration").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("cast").value = "";
+    document.getElementById("image").value = "";
+}
+
+// Open Add Movie Modal
+document.getElementById("open-add-modal").addEventListener("click", function () {
+    modal.style.display = "flex";
+    modalTitle.innerHTML = '<span class="main-color">A</span>dd <span class="main-color">M</span>ovie';
+    modalActionBtn.textContent = "Add Movie";
+
+    // Clear all input fields when opening the Add Movie modal
+    clearModalFields();
+});
+
+// Open Edit Movie Modal
+document.querySelectorAll(".edit-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        modal.style.display = "flex";
+        modalTitle.innerHTML = '<span class="main-color">E</span>dit <span class="main-color">M</span>ovie';
+        modalActionBtn.textContent = "Save Changes";
+
+        // Populate modal fields with example data (replace this with actual logic)
+        document.getElementById("title").value = "The Judge From Hell";
+        document.getElementById("genre").value = "Thriller";
+        document.getElementById("release-date").value = "2020-08-07";
+        document.getElementById("ratings").value = "5";
+        document.getElementById("duration").value = "2h 30m";
+        document.getElementById("description").value = "A Demon Judge";
+    });
+});
+
+// Close Modal
+document.getElementById("close-modal").addEventListener("click", function () {
+    modal.style.display = "none";
+});
+
+// Get modal elements
+const viewModal = document.getElementById("view-movie-modal");
+const closeViewModal = document.getElementById("close-view-modal");
+
+// Open View Movie Modal
+document.querySelectorAll(".view-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        viewModal.style.display = "flex";
+
+        // Example data - replace this with actual dynamic data
+        document.getElementById("view-movie-title").textContent = "The Judge From Hell";
+        document.getElementById("movie-poster").src = "images/JudgeFromHell.jpg";
+        document.getElementById("view-title").textContent = "The Judge From Hell";
+        document.getElementById("view-genre").textContent = "Thriller";
+        document.getElementById("view-release-date").textContent = "2020-08-07";
+        document.getElementById("view-description").textContent = "A demon judge";
+        document.getElementById("view-ratings").textContent = "⭐⭐⭐⭐⭐";
+        document.getElementById("view-duration").textContent = "120 mins";
+        document.getElementById("view-cast").textContent = "Cast: Park Shin-hye and Kim Jae-young";
+
+    });
+});
+
+// Close View Modal
+closeViewModal.addEventListener("click", function () {
+    viewModal.style.display = "none";
+});
+
+
+    </script>
+</body>
+
+
+</html>
