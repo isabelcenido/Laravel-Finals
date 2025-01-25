@@ -56,13 +56,18 @@
     <div class="main">
         <div class="login-container">
             <h2 class="text-center mb-4">Lanmar Resort</h2>
-            @csrf
             @if($errors->any())
                 @foreach($errors->all() as $error)
-                <div class="alert alert-danger">{{$error}}</div>
+                <div class="alert alert-danger" style="font-size: 15px;">{{$error}}</div>
                 @endforeach
+            @elseif (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
-            <form method="POST" action="{{route('login')}}">
+            
+            <form method="POST" action="{{route('loginAccess')}}">
+                @csrf
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
@@ -73,7 +78,7 @@
                     </div>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                <button type="submit" name="submit" class="btn btn-primary w-100">Login</button>
             </form>
         </div>
 

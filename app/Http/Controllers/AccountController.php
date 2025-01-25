@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -20,7 +21,7 @@ class AccountController extends Controller
     }
 
     public function home(){
-        return view('home');
+        return view('Movie.home');
     }
 
     public function register(Request $request){
@@ -38,6 +39,7 @@ class AccountController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user',
         ]);
 
         return redirect('/login')->with('success','Registered Successfully');
@@ -55,8 +57,14 @@ class AccountController extends Controller
             Auth::login($account);
 
             Session::flash('success', 'Login Successfully');
-
-            return redirect()->route('/home');
+            $user = Auth::user();
+            if ($user && $user->isUser()) {
+                return redirect()->route('home_movie');
+            }
+            elseif($user && $user->isAdmin()){
+                return redirect()->route('admin_dashboard');
+            }
+            
         }
 
         return redirect()->back()->withErrors(['username'=>'Invalid username or password.']);
