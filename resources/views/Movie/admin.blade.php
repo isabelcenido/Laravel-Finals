@@ -23,7 +23,10 @@
                     <span class="main-color">P</span>irate<span class="main-color">B</span>ai
                 </a>
                 <ul class="nav-menu" id="nav-menu">
-                    <li><a href="#">Home</a></li>
+                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                        @csrf
+                        <button type="submit" class="nav-link btn btn-link text-decoration-none text-white">Logout</button>
+                    </form>
                 </ul>
             </div>
         </div>
@@ -58,7 +61,10 @@
                             <td class="actions">
                                 <button class="action-btn view-btn" data-id="{{ $movie->id }}">View</button>
                                 <button class="action-btn edit-btn" data-id="{{ $movie->id }}">Edit</button>
-                                <button class="action-btn delete-btn" data-id="{{ $movie->id }}">Delete</button>
+                                <form action="">
+                                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                                    <button class="action-btn delete-btn" data-id="{{ $movie->id }}">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     @empty
@@ -77,7 +83,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addModalLabel"><span class="main-color">A</span>dd <span class="main-color">M</span>ovie</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -140,7 +146,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="genreModalLabel">Manage Genre</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -192,11 +198,11 @@
                     <p><strong>Genre:</strong> <span id="view-genre"></span></p>
                     <p><strong>Release Date:</strong> <span id="view-release-date"></span></p>
                     <p><strong>Duration:</strong> <span id="view-duration"></span></p>
-                    <p><strong>Cast:</strong> <span id="view-cast"></span></p>
                 </div>
                 <div class="description-section px-4 py-3 text-white bg-secondary flex-grow-1">
                     <p><strong>Description:</strong></p>
                     <p id="view-description" class="movie-description"></p>
+                    <p><strong>Cast:</strong> <span id="view-cast"></span></p>
                     <p><strong>Ratings:</strong> <span id="view-ratings" class="ratings"></span>/5</p>
                 </div>
             </div>
@@ -271,16 +277,19 @@
 
 
 <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('assets/js/jquery.min.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const genreList = document.getElementById('genreList');
         const addButton = document.getElementById('addInclusionButton');
         const genreInput = document.getElementById('name');
         const genreDropdown = document.getElementById('genre');
+        const genreEditDropdown = document.getElementById('edit-genre');
         const addMovieButton = document.getElementById('modal-add-btn');
         const viewButtons = document.querySelectorAll('.view-btn');
         const editButtons = document.querySelectorAll('.edit-btn');
         const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        const deleteButtons = document.querySelectorAll('.delete-btn');
 
         // Fetch existing genres
         function fetchGenres() {
@@ -365,6 +374,20 @@
                 });
         }
 
+        function fetchEditDropGenres() {
+            fetch('/genres')
+                .then(response => response.json())
+                .then(data => {
+                    genreEditDropdown.innerHTML = '<option hidden selected>Select Genre</option>';
+                    data.forEach(genre => {
+                        const option = document.createElement('option');
+                        option.value = genre.id;
+                        option.textContent = genre.name;
+                        genreEditDropdown.appendChild(option);
+                    });
+                });
+        }
+
         // Add a movie
         addMovieButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -392,6 +415,7 @@
                     alert(data.message);
                     document.querySelector('form').reset(); // Reset the form
                     $('#addModal').modal('hide'); // Hide the modal
+                    location.reload();
                 } else {
                     alert('Failed to add movie. Please check your inputs.');
                 }
@@ -436,6 +460,7 @@
         editButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const movieId = button.dataset.id;
+                fetchEditDropGenres();
 
                 // Fetch movie data using AJAX or Fetch API
                 fetch(`/editmovies/${movieId}`)
@@ -489,6 +514,32 @@
                     }
                 })
                 .catch(error => console.error('Error updating movie:', error));
+        });
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const movieId = button.dataset.id;
+
+                // Show confirmation dialog
+                if (confirm('Are you sure you want to delete this movie? This action cannot be undone.')) {
+                    fetch(`/movies/${movieId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Movie deleted successfully!');
+                                location.reload(); 
+                            } else {
+                                alert('Error deleting movie.');
+                            }
+                        })
+                        .catch(error => console.error('Error deleting movie:', error));
+                }
+            });
         });
 
 

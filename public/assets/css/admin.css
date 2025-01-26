@@ -333,7 +333,9 @@ a.movie-item:hover {
 .cancel-btn:hover {
     background-color: #c0392b;
 }
-
+.actions{
+    display: flex;
+}
 .actions .action-btn {
     padding: 6px 12px;
     margin: 0 5px;

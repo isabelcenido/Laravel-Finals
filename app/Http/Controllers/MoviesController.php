@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Movies;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MoviesController extends Controller
 {
@@ -67,6 +68,12 @@ class MoviesController extends Controller
     }
     public function getMovies()
     {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('home_movie')->with('error', 'Access denied. Admins only.');
+        }
+
         $movies = Movies::with('genre')->get();
         return view('Movie.admin', compact('movies'));
     }
@@ -90,5 +97,5 @@ class MoviesController extends Controller
 
         return response()->json(['success' => true]);
     }
-
+    
 }

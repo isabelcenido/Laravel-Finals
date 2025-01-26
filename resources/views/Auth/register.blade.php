@@ -7,45 +7,97 @@
     <title>Registration Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --main-color: #c0392b;
+            --body-bg: #181616;
+            --box-bg: #221f1f;
+            --text-color: #ffffff;
+        }
+
+        h2{
+            margin-block: 20px;
+        }
+
         body {
-            background: linear-gradient(190deg, #6592F3, #3B558D);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #333333;
+            margin-block: 100px;
+            font-family: "Cairo", sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            padding-top: var(--nav-height);
         }
+
         .register-container {
-            color: white;
-            background: linear-gradient(45deg,rgb(29, 69, 104),#19315D);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 300px;
+
+            background-color: var(--box-bg);
+            padding: 10px 30px;
+            border-radius: 10px;
+            max-width: 300px;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .register-container span{
+            color: var(--main-color);
+        }
+
+        .register-container h2 {
             text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-color);
         }
-        h2 {
-            text-align: center;
-            font-family: 'nautigal';
-            font-size: 3rem;
-            font-weight: normal;
-            margin: 0;
+
+        .register-container .main-color {
+            color: var(--main-color);
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        input {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+
+        .register-container form input {
             width: 100%;
-            box-sizing: border-box;
+            height: 20px;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: var(--body-bg);
+            color: var(--text-color);
         }
+
+        .register-container form input::placeholder {
+            color: #aaa;
+        }
+
+        .register-container form button {
+            width: 100%;
+            padding: 5px;
+            background-color: var(--main-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-container form button:hover {
+            background-color: #e74c3c;
+        }
+
+        .register-container p {
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .register-container p a {
+            color: var(--main-color);
+            text-decoration: none;
+        }
+
+        .register-container p a:hover {
+            text-decoration: underline;
+        }
+
+
+
         button {
             background: #19315D;
             border-color: #3B558D;
@@ -80,7 +132,7 @@
 </head>
 <body>
     <div class="register-container">
-        <h2>Lanmar Resort</h2>
+        <h2 ><span>P</span>irate<span>B</span>ai</h2>
         <p>Register Here</p>
         @if(session('success'))
             <div class="alert alert-success">{{session('success')}}</div>
@@ -99,7 +151,7 @@
             <input type="password" id="password" name="password" placeholder="Password" required>
             <p id="message" style="display: none; font-size: 10px; margin-top: -5px; text-align: left;"><span id="strength"></span></p>
             <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
-            
+
             <button type="submit" name="register" id="submitButton">Register</button>
             <p>Already have an account? <a href="{{route('login')}}">Login here</a></p>
         </form>
